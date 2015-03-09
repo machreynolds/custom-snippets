@@ -16,15 +16,15 @@ def get_filename_components(filename):
 
 def get_guard_name():
 	(dname, fname) = get_filename_components(vim.current.buffer.name)
-	vim.command("return '%s_%s'" % (to_under_score(dname).upper(), to_under_score(fname).upper().replace('.','_')))
+	return "%s_%s" % (to_under_score(dname).upper(), to_under_score(fname).upper().replace('.','_'))
 
 def get_namespace():
 	(dname, _) = get_filename_components(vim.current.buffer.name)
-	vim.command("return '%s'" % (dname[0].upper() + dname[1:]))
+	return "%s" % (dname[0].upper() + dname[1:])
 
 def get_header_path():
 	(dname, _) = get_filename_components(vim.current.buffer.name)
-	vim.command("return '%s'" % (dname))
+	return "return '%s'" % dname
 
 endglobal
 
@@ -36,9 +36,29 @@ ${2}
 endsnippet
 
 snippet n "n"
-namespace ${1:`!p get_namespace()`} {
-${2}
-} // namespace $1 {
+namespace ${1:`!p snip.rv = get_namespace()`} {
+${VISUAL}${0}
+} // namespace $1
+endsnippet
+
+snippet bt "BOOST_AUTO_TEST_CASE"
+BOOST_AUTO_TEST_CASE($1) {
+    ${0}
+}
+endsnippet
+
+snippet bft "BOOST_FIXTURE_TEST_CASE"
+BOOST_FIXTURE_TEST_CASE($1, $2) {
+    ${0}
+}
+endsnippet
+
+snippet ce "BOOST_CHECK_EQUAL"
+BOOST_CHECK_EQUAL($1,$2);
+endsnippet
+
+snippet re "BOOST_REQUIRE_EQUAL"
+BOOST_REQUIRE_EQUAL($1,$2);
 endsnippet
 
 # vim:ft=snippets:
