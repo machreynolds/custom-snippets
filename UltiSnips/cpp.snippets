@@ -1,0 +1,44 @@
+extends cpp
+
+global !p
+import vim
+import os
+import re
+
+def to_under_score(camel):
+    tmp = re.sub('(.)([A-Z][a-z]+)', r'\1_\2', camel)
+    return re.sub('([a-z0-9])([A-Z])', r'\1_\2', tmp).lower()
+
+def get_filename_components(filename):
+	(p, fname) = os.path.split(filename)
+	(p, dname) = os.path.split(p)
+	return (dname, fname)
+
+def get_guard_name():
+	(dname, fname) = get_filename_components(vim.current.buffer.name)
+	vim.command("return '%s_%s'" % (to_under_score(dname).upper(), to_under_score(fname).upper().replace('.','_')))
+
+def get_namespace():
+	(dname, _) = get_filename_components(vim.current.buffer.name)
+	vim.command("return '%s'" % (dname[0].upper() + dname[1:]))
+
+def get_header_path():
+	(dname, _) = get_filename_components(vim.current.buffer.name)
+	vim.command("return '%s'" % (dname))
+
+endglobal
+
+snippet guard "guard"
+#ifndef ${1:`!p get_guard_name()`}
+#define $1
+${2}
+#endif // $1
+endsnippet
+
+snippet n "n"
+namespace ${1:`!p get_namespace()`} {
+${2}
+} // namespace $1 {
+endsnippet
+
+# vim:ft=snippets:
