@@ -29,7 +29,7 @@ def get_header_path():
 endglobal
 
 snippet guard "guard"
-#ifndef ${1:`!p get_guard_name()`}
+#ifndef ${1:`!p snip.rv = get_guard_name()`}
 #define $1
 ${2}
 #endif // $1
